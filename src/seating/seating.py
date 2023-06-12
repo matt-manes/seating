@@ -34,6 +34,10 @@ class Order:
         self.functions = []
         self.after = []
         self.seats = []
+        # These will be a list of tuples containing the node and the index it was found at
+        # so they can be reinserted after sorting
+        self.expressions = []
+        self.comments = []
 
     def sort_nodes_by_name(self, nodes: list[ast.stmt]) -> list[ast.stmt]:
         return sorted(nodes, key=lambda node: node.name)
@@ -68,7 +72,7 @@ class Order:
         self.functions = self.sort_nodes_by_name(self.functions)
         self.properties = self.sort_nodes_by_name(self.properties)
         self.assigns = self.sort_assigns(self.assigns)
-        return (
+        body = (
             self.before
             + self.assigns
             + self.dunders
@@ -77,6 +81,9 @@ class Order:
             + self.seats
             + self.after
         )
+        for expression in self.expressions + self.comments:
+            body.insert(expression[1], expression[0])
+        return body
 
 
 def seat(
@@ -95,8 +102,6 @@ def seat(
 
     If you have class contents that are grouped a certain way and you want the groups individually sorted
     so that the grouping is maintained, you can use `# Seat` to demarcate the groups.
-
-    Note: Comments that are in a class body, but not in a function will remain at the same line.
 
     i.e. if the source is:
     >>> class MyClass():
@@ -125,48 +130,49 @@ def seat(
     start_line = start_line or 0
     stop_line = stop_line or len(source.splitlines()) + 1
     sections = get_seat_sections(source)
-    comments = []
     for section in sections:
         for i, stmt in enumerate(tree.body):
             if type(stmt) == ast.ClassDef:
                 order = Order()
-                for child in stmt.body:
-                    type_ = type(child)
-                    if child.lineno <= start_line or child.lineno < section[0]:
-                        order.before.append(child)
-                    elif stop_line < child.lineno or child.lineno > section[1]:
-                        order.after.append(child)
-                    elif type_ == ast.Comment:
-                        if "# Seat" in child.value:
-                            order.seats.append(child)
+                for j, child in enumerate(stmt.body):
+                    try:
+                        type_ = type(child)
+                        if child.lineno <= start_line or child.lineno < section[0]:
+                            order.before.append(child)
+                        elif stop_line < child.lineno or child.lineno > section[1]:
+                            order.after.append(child)
+                        elif type_ == ast.Expr:
+                            order.expressions.append((child, j))
+                        elif type_ == ast.Comment:
+                            if "# Seat" in child.value:
+                                order.seats.append(child)
+                            else:
+                                order.comments.append((child, j))
+                        elif type_ in [ast.Assign, ast.AugAssign, ast.AnnAssign]:
+                            order.assigns.append(child)
+                        elif child.name.startswith("__") and child.name.endswith("__"):
+                            order.dunders.append(child)
+                        elif child.decorator_list:
+                            for decorator in child.decorator_list:
+                                decorator_type = type(decorator)
+                                if (
+                                    decorator_type == ast.Name
+                                    and decorator.id == "property"
+                                ) or (
+                                    decorator_type == ast.Attribute
+                                    and decorator.attr in ["setter", "deleter"]
+                                ):
+                                    order.properties.append(child)
+                                    break
+                            if child not in order.properties:
+                                order.functions.append(child)
                         else:
-                            comments.append(child)
-                    elif type_ in [ast.Assign, ast.AugAssign, ast.AnnAssign]:
-                        order.assigns.append(child)
-                    elif child.name.startswith("__") and child.name.endswith("__"):
-                        order.dunders.append(child)
-                    elif child.decorator_list:
-                        for decorator in child.decorator_list:
-                            decorator_type = type(decorator)
-                            if (
-                                decorator_type == ast.Name
-                                and decorator.id == "property"
-                            ) or (
-                                decorator_type == ast.Attribute
-                                and decorator.attr in ["setter", "deleter"]
-                            ):
-                                order.properties.append(child)
-                                break
-                        if child not in order.properties:
                             order.functions.append(child)
-                    else:
-                        order.functions.append(child)
+                    except Exception as e:
+                        print(ast.dump(child, indent=2))
+                        raise e
                 tree.body[i].body = order.sort()
-    # Put comments back in
-    source = ast.unparse(tree).splitlines()
-    for comment in comments:
-        source.insert(comment.lineno - 1, f"{' '*comment.col_offset}{comment.value}")
-    return "\n".join(source)
+    return ast.unparse(tree)
 
 
 def get_args() -> argparse.Namespace:
@@ -197,6 +203,13 @@ def get_args() -> argparse.Namespace:
         default=None,
         help=""" Write changes to this file, otherwise changes are written back to the original file. """,
     )
+    parser.add_argument(
+        "-d",
+        "--dump",
+        action="store_true",
+        help=""" Dump ast tree to file instead of doing anything else. 
+        For debugging purposes.""",
+    )
     args = parser.parse_args()
 
     return args
@@ -206,10 +219,16 @@ def main(args: argparse.Namespace | None = None):
     if not args:
         args = get_args()
     source = Pathier(args.file).read_text()
-    source = seat(source, args.start, args.stop)
-    if not args.noblack:
-        source = black.format_str(source, mode=black.Mode())
-    Pathier(args.output or args.file).write_text(source)
+    if args.dump:
+        file = Pathier(args.file)
+        file = file.with_name(f"{file.stem}_ast_dump.txt").write_text(
+            ast.dump(ast.parse(source, type_comments=True), indent=2)
+        )
+    else:
+        source = seat(source, args.start, args.stop)
+        if not args.noblack:
+            source = black.format_str(source, mode=black.Mode())
+        Pathier(args.output or args.file).write_text(source)
 
 
 if __name__ == "__main__":

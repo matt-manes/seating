@@ -41,16 +41,13 @@ class MyClass():
 
 then the three sets of code in brackets will be sorted independently from one another.
 
-Note: Comments that are in a class body, but not in a function will remain at the same line.<br>
-This can result in them being place in odd places after the file is sorted.
-
 ## Usage
 
 #### CLI
 
 <pre>
 >seat -h
-usage: seat [-h] [--start START] [--stop STOP] [-nb] [-o OUTPUT] file
+usage: seat [-h] [--start START] [--stop STOP] [-nb] [-o OUTPUT] [-d] file
 
 positional arguments:
   file                  The file to format.
@@ -62,6 +59,7 @@ options:
   -nb, --noblack        Don't format file with Black after sorting.
   -o OUTPUT, --output OUTPUT
                         Write changes to this file, otherwise changes are written back to the original file.
+  -d, --dump            Dump ast tree to file instead of doing anything else. For debugging purposes.
 </pre>
 
 #### Programmatically

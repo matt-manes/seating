@@ -5,36 +5,6 @@ import black
 from pathier import Pathier
 
 
-def sort_nodes_by_name(nodes: list[ast.stmt]) -> list[ast.stmt]:
-    return sorted(nodes, key=lambda node: node.name)
-
-
-def sort_dunders(dunders: list[ast.stmt]) -> list[ast.stmt]:
-    """Sort `dunders` alphabetically, except `__init__` is placed at the front, if it exists."""
-    dunders = sort_nodes_by_name(dunders)
-    init = None
-    for i, dunder in enumerate(dunders):
-        if dunder.name == "__init__":
-            init = dunders.pop(i)
-            break
-    if init:
-        dunders.insert(0, init)
-    return dunders
-
-
-def sort_assigns(assigns: list[ast.stmt]) -> list[ast.stmt]:
-    """Sort assignment statments."""
-
-    def get_name(node: ast.stmt) -> str:
-        type_ = type(node)
-        if type_ == ast.Assign:
-            return node.targets[0].id
-        else:
-            return node.target.id
-
-    return sorted(assigns, key=get_name)
-
-
 def get_seat_sections(source: str) -> list[tuple[int, int]]:
     """Return a list of line number pairs for content between `# Seat` comments in `source`.
 
@@ -53,6 +23,60 @@ def get_seat_sections(source: str) -> list[tuple[int, int]]:
         sections.append((previous_endline() + 1, len(lines) + 1))
         return sections
     return [(1, len(source.splitlines()) + 1)]
+
+
+class Order:
+    def __init__(self):
+        self.before = []
+        self.assigns = []
+        self.dunders = []
+        self.properties = []
+        self.functions = []
+        self.after = []
+        self.seats = []
+
+    def sort_nodes_by_name(self, nodes: list[ast.stmt]) -> list[ast.stmt]:
+        return sorted(nodes, key=lambda node: node.name)
+
+    def sort_dunders(self, dunders: list[ast.stmt]) -> list[ast.stmt]:
+        """Sort `dunders` alphabetically, except `__init__` is placed at the front, if it exists."""
+        dunders = self.sort_nodes_by_name(dunders)
+        init = None
+        for i, dunder in enumerate(dunders):
+            if dunder.name == "__init__":
+                init = dunders.pop(i)
+                break
+        if init:
+            dunders.insert(0, init)
+        return dunders
+
+    def sort_assigns(self, assigns: list[ast.stmt]) -> list[ast.stmt]:
+        """Sort assignment statments."""
+
+        def get_name(node: ast.stmt) -> str:
+            type_ = type(node)
+            if type_ == ast.Assign:
+                return node.targets[0].id
+            else:
+                return node.target.id
+
+        return sorted(assigns, key=get_name)
+
+    def sort(self) -> list[ast.stmt]:
+        """Sort and return members as a single list."""
+        self.dunders = self.sort_dunders(self.dunders)
+        self.functions = self.sort_nodes_by_name(self.functions)
+        self.properties = self.sort_nodes_by_name(self.properties)
+        self.assigns = self.sort_assigns(self.assigns)
+        return (
+            self.before
+            + self.assigns
+            + self.dunders
+            + self.properties
+            + self.functions
+            + self.seats
+            + self.after
+        )
 
 
 def seat(
@@ -105,28 +129,22 @@ def seat(
     for section in sections:
         for i, stmt in enumerate(tree.body):
             if type(stmt) == ast.ClassDef:
-                before = []
-                assigns = []
-                dunders = []
-                properties = []
-                functions = []
-                after = []
-                seats = []
+                order = Order()
                 for child in stmt.body:
                     type_ = type(child)
                     if child.lineno <= start_line or child.lineno < section[0]:
-                        before.append(child)
+                        order.before.append(child)
                     elif stop_line < child.lineno or child.lineno > section[1]:
-                        after.append(child)
+                        order.after.append(child)
                     elif type_ == ast.Comment:
                         if "# Seat" in child.value:
-                            seats.append(child)
+                            order.seats.append(child)
                         else:
                             comments.append(child)
                     elif type_ in [ast.Assign, ast.AugAssign, ast.AnnAssign]:
-                        assigns.append(child)
+                        order.assigns.append(child)
                     elif child.name.startswith("__") and child.name.endswith("__"):
-                        dunders.append(child)
+                        order.dunders.append(child)
                     elif child.decorator_list:
                         for decorator in child.decorator_list:
                             decorator_type = type(decorator)
@@ -137,19 +155,13 @@ def seat(
                                 decorator_type == ast.Attribute
                                 and decorator.attr in ["setter", "deleter"]
                             ):
-                                properties.append(child)
+                                order.properties.append(child)
                                 break
-                        if child not in properties:
-                            functions.append(child)
+                        if child not in order.properties:
+                            order.functions.append(child)
                     else:
-                        functions.append(child)
-                dunders = sort_dunders(dunders)
-                functions = sort_nodes_by_name(functions)
-                properties = sort_nodes_by_name(properties)
-                assigns = sort_assigns(assigns)
-                tree.body[i].body = (
-                    before + assigns + dunders + properties + functions + seats + after
-                )
+                        order.functions.append(child)
+                tree.body[i].body = order.sort()
     # Put comments back in
     source = ast.unparse(tree).splitlines()
     for comment in comments:

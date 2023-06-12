@@ -7,7 +7,7 @@ name = "seating"
 description = "Sort the order of class functions and properties"
 version = "0.0.0"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["ast_comments", "black", "pathier", "pytest"]
 readme = "README.md"
 keywords = ["sort", "order", "alphabetical", "style"]
 classifiers = [

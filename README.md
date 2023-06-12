@@ -29,6 +29,7 @@ so that the grouping is maintained, you can use `# Seat` to demarcate the groups
 
 
 i.e. if the source is:
+
 <pre>
 class MyClass():
     {arbitrary lines of code}
@@ -42,9 +43,11 @@ then the three sets of code in brackets will be sorted independently from one an
 
 Note: Comments that are in a class body, but not in a function will remain at the same line.<br>
 This can result in them being place in odd places after the file is sorted.
+
 ## Usage
 
-### CLI
+#### CLI
+
 <pre>
 >seat -h
 usage: seat [-h] [--start START] [--stop STOP] [-nb] [-o OUTPUT] file
@@ -61,7 +64,8 @@ options:
                         Write changes to this file, otherwise changes are written back to the original file.
 </pre>
 
-### Programmatically
+#### Programmatically
+
 <pre>
 from seating import seat
 from pathier import Pathier

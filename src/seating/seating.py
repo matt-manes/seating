@@ -25,7 +25,7 @@ def get_seat_sections(source: str) -> list[tuple[int, int]]:
     return [(1, len(source.splitlines()) + 1)]
 
 
-class Order:
+class Seater:
     def __init__(self):
         self.before = []
         self.assigns = []
@@ -133,7 +133,7 @@ def seat(
     for section in sections:
         for i, stmt in enumerate(tree.body):
             if type(stmt) == ast.ClassDef:
-                order = Order()
+                order = Seater()
                 for j, child in enumerate(stmt.body):
                     try:
                         type_ = type(child)

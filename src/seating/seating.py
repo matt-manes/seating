@@ -86,6 +86,26 @@ class Seats:
         return body
 
 
+def fix_type_ignore(source: str) -> str:
+    """Fix misplacement of `# type: ignore` comments in sorted `source`.
+
+    Corrects when
+    >>> var = 6 # type: ignore
+
+    gets turned into
+
+    >>> # type: ignore
+    >>> var = 6"""
+    lines = source.splitlines(True)
+    clean = lambda s: s.replace(" ", "").replace("\n", "")
+    for i, line in enumerate(lines):
+        if clean(line) == "#type:ignore" and 0 < i < len(lines):
+            lines[i] = ""
+            if "#type:ignore" not in clean(lines[i + 1]):
+                lines[i + 1] = lines[i + 1].strip("\n") + "# type: ignore\n"
+    return "".join(lines)
+
+
 def seat(
     source: str, start_line: int | None = None, stop_line: int | None = None
 ) -> str:
@@ -172,7 +192,8 @@ def seat(
                         print(ast.dump(child, indent=2))
                         raise e
                 tree.body[i].body = order.sort()
-    return ast.unparse(tree)
+    source = ast.unparse(tree)
+    return fix_type_ignore(source)
 
 
 def get_args() -> argparse.Namespace:

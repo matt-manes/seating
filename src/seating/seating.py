@@ -157,7 +157,7 @@ def seat(
                                 decorator_type = type(decorator)
                                 if (
                                     decorator_type == ast.Name
-                                    and decorator.id == "property"
+                                    and "property" in decorator.id
                                 ) or (
                                     decorator_type == ast.Attribute
                                     and decorator.attr in ["setter", "deleter"]

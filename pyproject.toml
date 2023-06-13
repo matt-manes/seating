@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "seating"
 description = "Sort the order of class functions and properties"
-version = "0.0.1"
+version = "0.0.2"
 requires-python = ">=3.10"
 dependencies = ["ast_comments", "black", "pathier", "pytest"]
 readme = "README.md"

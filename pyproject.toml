@@ -37,7 +37,9 @@ exclude = [
     ".pytest_cache",
     ".vscode",
     "tests",
-    ".gitignore"
+    "htmlcov",
+    "docs",
+    "*.md"
     ]
 [project.scripts]
 seat = "seating.seating:main"

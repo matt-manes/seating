@@ -18,14 +18,15 @@
         <input id="togglestate" type="checkbox" aria-hidden="true" tabindex="-1">
         <div>
 
-            <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
-                   pattern=".+" required>
 
 
-        <h2>Submodules</h2>
-        <ul>
-                <li><a href="seating/seating.html">seating</a></li>
-        </ul>
+
+        <h2>API Documentation</h2>
+            <ul class="memberlist">
+            <li>
+                    <a class="function" href="#seat">seat</a>
+            </li>
+    </ul>
 
 
 
@@ -47,191 +48,167 @@ seating    </h1>
                         <label class="view-source-button" for="mod-seating-view-source"><span>View Source</span></label>
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span> <span class="nn">.seating</span> <span class="kn">import</span> <span class="n">seat</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.3&quot;</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">4</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;seat&quot;</span><span class="p">]</span>
 </span></pre></div>
 
 
             </section>
+                <section id="seat">
+                            <input id="seat-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">seat</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">source</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">start_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">stop_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+                <label class="view-source-button" for="seat-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#seat"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="seat-112"><a href="#seat-112"><span class="linenos">112</span></a><span class="k">def</span> <span class="nf">seat</span><span class="p">(</span>
+</span><span id="seat-113"><a href="#seat-113"><span class="linenos">113</span></a>    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stop_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="seat-114"><a href="#seat-114"><span class="linenos">114</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="seat-115"><a href="#seat-115"><span class="linenos">115</span></a>    <span class="sd">&quot;&quot;&quot;Sort the contents of classes in `source`, where `source` is parsable Python code.</span>
+</span><span id="seat-116"><a href="#seat-116"><span class="linenos">116</span></a><span class="sd">    Anything not inside a class will be untouched.</span>
+</span><span id="seat-117"><a href="#seat-117"><span class="linenos">117</span></a>
+</span><span id="seat-118"><a href="#seat-118"><span class="linenos">118</span></a><span class="sd">    The modified `source` will be returned.</span>
+</span><span id="seat-119"><a href="#seat-119"><span class="linenos">119</span></a>
+</span><span id="seat-120"><a href="#seat-120"><span class="linenos">120</span></a><span class="sd">    #### :params:</span>
+</span><span id="seat-121"><a href="#seat-121"><span class="linenos">121</span></a>
+</span><span id="seat-122"><a href="#seat-122"><span class="linenos">122</span></a><span class="sd">    * `start_line`: Only sort contents after this line.</span>
+</span><span id="seat-123"><a href="#seat-123"><span class="linenos">123</span></a>
+</span><span id="seat-124"><a href="#seat-124"><span class="linenos">124</span></a><span class="sd">    * `stop_line`: Only sort contents before this line.</span>
+</span><span id="seat-125"><a href="#seat-125"><span class="linenos">125</span></a>
+</span><span id="seat-126"><a href="#seat-126"><span class="linenos">126</span></a><span class="sd">    If you have class contents that are grouped a certain way and you want the groups individually sorted</span>
+</span><span id="seat-127"><a href="#seat-127"><span class="linenos">127</span></a><span class="sd">    so that the grouping is maintained, you can use `# Seat` to demarcate the groups.</span>
+</span><span id="seat-128"><a href="#seat-128"><span class="linenos">128</span></a>
+</span><span id="seat-129"><a href="#seat-129"><span class="linenos">129</span></a><span class="sd">    i.e. if the source is:</span>
+</span><span id="seat-130"><a href="#seat-130"><span class="linenos">130</span></a><span class="sd">    &gt;&gt;&gt; class MyClass():</span>
+</span><span id="seat-131"><a href="#seat-131"><span class="linenos">131</span></a><span class="sd">    &gt;&gt;&gt;     {arbitrary lines of code}</span>
+</span><span id="seat-132"><a href="#seat-132"><span class="linenos">132</span></a><span class="sd">    &gt;&gt;&gt;     # Seat</span>
+</span><span id="seat-133"><a href="#seat-133"><span class="linenos">133</span></a><span class="sd">    &gt;&gt;&gt;     {more arbitrary code}</span>
+</span><span id="seat-134"><a href="#seat-134"><span class="linenos">134</span></a><span class="sd">    &gt;&gt;&gt;     # Seat</span>
+</span><span id="seat-135"><a href="#seat-135"><span class="linenos">135</span></a><span class="sd">    &gt;&gt;&gt;     {yet more code}</span>
+</span><span id="seat-136"><a href="#seat-136"><span class="linenos">136</span></a>
+</span><span id="seat-137"><a href="#seat-137"><span class="linenos">137</span></a><span class="sd">    Then the three sets of code in brackets will be sorted independently from one another</span>
+</span><span id="seat-138"><a href="#seat-138"><span class="linenos">138</span></a><span class="sd">    (assuming no values are given for `start_line` or `stop_line`).</span>
+</span><span id="seat-139"><a href="#seat-139"><span class="linenos">139</span></a>
+</span><span id="seat-140"><a href="#seat-140"><span class="linenos">140</span></a><span class="sd">    #### :Sorting and Priority:</span>
+</span><span id="seat-141"><a href="#seat-141"><span class="linenos">141</span></a>
+</span><span id="seat-142"><a href="#seat-142"><span class="linenos">142</span></a><span class="sd">    * Class variables declared in class body outside of a function</span>
+</span><span id="seat-143"><a href="#seat-143"><span class="linenos">143</span></a><span class="sd">    * Dunder methods</span>
+</span><span id="seat-144"><a href="#seat-144"><span class="linenos">144</span></a><span class="sd">    * Functions decorated with `property` or corresponding `.setter` and `.deleter` methods</span>
+</span><span id="seat-145"><a href="#seat-145"><span class="linenos">145</span></a><span class="sd">    * Class functions</span>
+</span><span id="seat-146"><a href="#seat-146"><span class="linenos">146</span></a>
+</span><span id="seat-147"><a href="#seat-147"><span class="linenos">147</span></a><span class="sd">    Each of these groups will be sorted alphabetically with respect to themselves.</span>
+</span><span id="seat-148"><a href="#seat-148"><span class="linenos">148</span></a>
+</span><span id="seat-149"><a href="#seat-149"><span class="linenos">149</span></a><span class="sd">    The only exception is for dunder methods.</span>
+</span><span id="seat-150"><a href="#seat-150"><span class="linenos">150</span></a><span class="sd">    They will be sorted alphabetically except that `__init__` will be first.</span>
+</span><span id="seat-151"><a href="#seat-151"><span class="linenos">151</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="seat-152"><a href="#seat-152"><span class="linenos">152</span></a>    <span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">type_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-153"><a href="#seat-153"><span class="linenos">153</span></a>    <span class="n">start_line</span> <span class="o">=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="mi">0</span>
+</span><span id="seat-154"><a href="#seat-154"><span class="linenos">154</span></a>    <span class="n">stop_line</span> <span class="o">=</span> <span class="n">stop_line</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="seat-155"><a href="#seat-155"><span class="linenos">155</span></a>    <span class="n">sections</span> <span class="o">=</span> <span class="n">get_seat_sections</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+</span><span id="seat-156"><a href="#seat-156"><span class="linenos">156</span></a>    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+</span><span id="seat-157"><a href="#seat-157"><span class="linenos">157</span></a>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+</span><span id="seat-158"><a href="#seat-158"><span class="linenos">158</span></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">):</span>
+</span><span id="seat-159"><a href="#seat-159"><span class="linenos">159</span></a>                <span class="n">order</span> <span class="o">=</span> <span class="n">Seats</span><span class="p">()</span>
+</span><span id="seat-160"><a href="#seat-160"><span class="linenos">160</span></a>                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stmt</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+</span><span id="seat-161"><a href="#seat-161"><span class="linenos">161</span></a>                    <span class="k">try</span><span class="p">:</span>
+</span><span id="seat-162"><a href="#seat-162"><span class="linenos">162</span></a>                        <span class="n">type_</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-163"><a href="#seat-163"><span class="linenos">163</span></a>                        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">lineno</span> <span class="o">&lt;=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">lineno</span> <span class="o">&lt;</span> <span class="n">section</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span><span id="seat-164"><a href="#seat-164"><span class="linenos">164</span></a>                            <span class="n">order</span><span class="o">.</span><span class="n">before</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-165"><a href="#seat-165"><span class="linenos">165</span></a>                        <span class="k">elif</span> <span class="n">stop_line</span> <span class="o">&lt;</span> <span class="n">child</span><span class="o">.</span><span class="n">lineno</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">lineno</span> <span class="o">&gt;</span> <span class="n">section</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+</span><span id="seat-166"><a href="#seat-166"><span class="linenos">166</span></a>                            <span class="n">order</span><span class="o">.</span><span class="n">after</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-167"><a href="#seat-167"><span class="linenos">167</span></a>                        <span class="k">elif</span> <span class="n">type_</span> <span class="o">==</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">:</span>
+</span><span id="seat-168"><a href="#seat-168"><span class="linenos">168</span></a>                            <span class="n">order</span><span class="o">.</span><span class="n">expressions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">child</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+</span><span id="seat-169"><a href="#seat-169"><span class="linenos">169</span></a>                        <span class="k">elif</span> <span class="n">type_</span> <span class="o">==</span> <span class="n">ast</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-170"><a href="#seat-170"><span class="linenos">170</span></a>                            <span class="k">if</span> <span class="s2">&quot;# Seat&quot;</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-171"><a href="#seat-171"><span class="linenos">171</span></a>                                <span class="n">order</span><span class="o">.</span><span class="n">seats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-172"><a href="#seat-172"><span class="linenos">172</span></a>                            <span class="k">else</span><span class="p">:</span>
+</span><span id="seat-173"><a href="#seat-173"><span class="linenos">173</span></a>                                <span class="n">order</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">child</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+</span><span id="seat-174"><a href="#seat-174"><span class="linenos">174</span></a>                        <span class="k">elif</span> <span class="n">type_</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AugAssign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">]:</span>
+</span><span id="seat-175"><a href="#seat-175"><span class="linenos">175</span></a>                            <span class="n">order</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-176"><a href="#seat-176"><span class="linenos">176</span></a>                        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-177"><a href="#seat-177"><span class="linenos">177</span></a>                            <span class="s2">&quot;__&quot;</span>
+</span><span id="seat-178"><a href="#seat-178"><span class="linenos">178</span></a>                        <span class="p">)</span> <span class="ow">and</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-179"><a href="#seat-179"><span class="linenos">179</span></a>                            <span class="s2">&quot;__&quot;</span>
+</span><span id="seat-180"><a href="#seat-180"><span class="linenos">180</span></a>                        <span class="p">):</span>
+</span><span id="seat-181"><a href="#seat-181"><span class="linenos">181</span></a>                            <span class="n">order</span><span class="o">.</span><span class="n">dunders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-182"><a href="#seat-182"><span class="linenos">182</span></a>                        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">decorator_list</span><span class="p">:</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-183"><a href="#seat-183"><span class="linenos">183</span></a>                            <span class="k">for</span> <span class="n">decorator</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">decorator_list</span><span class="p">:</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-184"><a href="#seat-184"><span class="linenos">184</span></a>                                <span class="n">decorator_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">decorator</span><span class="p">)</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-185"><a href="#seat-185"><span class="linenos">185</span></a>                                <span class="k">if</span> <span class="p">(</span>
+</span><span id="seat-186"><a href="#seat-186"><span class="linenos">186</span></a>                                    <span class="n">decorator_type</span> <span class="o">==</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span>
+</span><span id="seat-187"><a href="#seat-187"><span class="linenos">187</span></a>                                    <span class="ow">and</span> <span class="s2">&quot;property&quot;</span> <span class="ow">in</span> <span class="n">decorator</span><span class="o">.</span><span class="n">id</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-188"><a href="#seat-188"><span class="linenos">188</span></a>                                <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+</span><span id="seat-189"><a href="#seat-189"><span class="linenos">189</span></a>                                    <span class="n">decorator_type</span> <span class="o">==</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span>
+</span><span id="seat-190"><a href="#seat-190"><span class="linenos">190</span></a>                                    <span class="ow">and</span> <span class="n">decorator</span><span class="o">.</span><span class="n">attr</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-191"><a href="#seat-191"><span class="linenos">191</span></a>                                    <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;setter&quot;</span><span class="p">,</span> <span class="s2">&quot;deleter&quot;</span><span class="p">]</span>
+</span><span id="seat-192"><a href="#seat-192"><span class="linenos">192</span></a>                                <span class="p">):</span>
+</span><span id="seat-193"><a href="#seat-193"><span class="linenos">193</span></a>                                    <span class="n">order</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-194"><a href="#seat-194"><span class="linenos">194</span></a>                                    <span class="k">break</span>
+</span><span id="seat-195"><a href="#seat-195"><span class="linenos">195</span></a>                            <span class="k">if</span> <span class="n">child</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">order</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
+</span><span id="seat-196"><a href="#seat-196"><span class="linenos">196</span></a>                                <span class="n">order</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-197"><a href="#seat-197"><span class="linenos">197</span></a>                        <span class="k">else</span><span class="p">:</span>
+</span><span id="seat-198"><a href="#seat-198"><span class="linenos">198</span></a>                            <span class="n">order</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="seat-199"><a href="#seat-199"><span class="linenos">199</span></a>                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="seat-200"><a href="#seat-200"><span class="linenos">200</span></a>                        <span class="nb">print</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</span><span id="seat-201"><a href="#seat-201"><span class="linenos">201</span></a>                        <span class="k">raise</span> <span class="n">e</span>
+</span><span id="seat-202"><a href="#seat-202"><span class="linenos">202</span></a>                <span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>  <span class="c1"># type:ignore</span>
+</span><span id="seat-203"><a href="#seat-203"><span class="linenos">203</span></a>    <span class="n">source</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">unparse</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</span><span id="seat-204"><a href="#seat-204"><span class="linenos">204</span></a>    <span class="k">return</span> <span class="n">fix_type_ignore</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Sort the contents of classes in <code>source</code>, where <code>source</code> is parsable Python code.
+Anything not inside a class will be untouched.</p>
+
+<p>The modified <code>source</code> will be returned.</p>
+
+<h4 id="params">:params:</h4>
+
+<ul>
+<li><p><code>start_line</code>: Only sort contents after this line.</p></li>
+<li><p><code>stop_line</code>: Only sort contents before this line.</p></li>
+</ul>
+
+<p>If you have class contents that are grouped a certain way and you want the groups individually sorted
+so that the grouping is maintained, you can use <code># Seat</code> to demarcate the groups.</p>
+
+<p>i.e. if the source is:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">{</span><span class="n">arbitrary</span> <span class="n">lines</span> <span class="n">of</span> <span class="n">code</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Seat</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">{</span><span class="n">more</span> <span class="n">arbitrary</span> <span class="n">code</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Seat</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">{</span><span class="n">yet</span> <span class="n">more</span> <span class="n">code</span><span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Then the three sets of code in brackets will be sorted independently from one another
+(assuming no values are given for <code>start_line</code> or <code>stop_line</code>).</p>
+
+<h4 id="sorting-and-priority">:Sorting and Priority:</h4>
+
+<ul>
+<li>Class variables declared in class body outside of a function</li>
+<li>Dunder methods</li>
+<li>Functions decorated with <code>property</code> or corresponding <code>.setter</code> and <code>.deleter</code> methods</li>
+<li>Class functions</li>
+</ul>
+
+<p>Each of these groups will be sorted alphabetically with respect to themselves.</p>
+
+<p>The only exception is for dunder methods.
+They will be sorted alphabetically except that <code>__init__</code> will be first.</p>
+</div>
+
+
+                </section>
     </main>
-<script>
-    function escapeHTML(html) {
-        return document.createElement('div').appendChild(document.createTextNode(html)).parentNode.innerHTML;
-    }
-
-    const originalContent = document.querySelector("main.pdoc");
-    let currentContent = originalContent;
-
-    function setContent(innerHTML) {
-        let elem;
-        if (innerHTML) {
-            elem = document.createElement("main");
-            elem.classList.add("pdoc");
-            elem.innerHTML = innerHTML;
-        } else {
-            elem = originalContent;
-        }
-        if (currentContent !== elem) {
-            currentContent.replaceWith(elem);
-            currentContent = elem;
-        }
-    }
-
-    function getSearchTerm() {
-        return (new URL(window.location)).searchParams.get("search");
-    }
-
-    const searchBox = document.querySelector(".pdoc input[type=search]");
-    searchBox.addEventListener("input", function () {
-        let url = new URL(window.location);
-        if (searchBox.value.trim()) {
-            url.hash = "";
-            url.searchParams.set("search", searchBox.value);
-        } else {
-            url.searchParams.delete("search");
-        }
-        history.replaceState("", "", url.toString());
-        onInput();
-    });
-    window.addEventListener("popstate", onInput);
-
-
-    let search, searchErr;
-
-    async function initialize() {
-        try {
-            search = await new Promise((resolve, reject) => {
-                const script = document.createElement("script");
-                script.type = "text/javascript";
-                script.async = true;
-                script.onload = () => resolve(window.pdocSearch);
-                script.onerror = (e) => reject(e);
-                script.src = "search.js";
-                document.getElementsByTagName("head")[0].appendChild(script);
-            });
-        } catch (e) {
-            console.error("Cannot fetch pdoc search index");
-            searchErr = "Cannot fetch search index.";
-        }
-        onInput();
-
-        document.querySelector("nav.pdoc").addEventListener("click", e => {
-            if (e.target.hash) {
-                searchBox.value = "";
-                searchBox.dispatchEvent(new Event("input"));
-            }
-        });
-    }
-
-    function onInput() {
-        setContent((() => {
-            const term = getSearchTerm();
-            if (!term) {
-                return null
-            }
-            if (searchErr) {
-                return `<h3>Error: ${searchErr}</h3>`
-            }
-            if (!search) {
-                return "<h3>Searching...</h3>"
-            }
-
-            window.scrollTo({top: 0, left: 0, behavior: 'auto'});
-
-            const results = search(term);
-
-            let html;
-            if (results.length === 0) {
-                html = `No search results for '${escapeHTML(term)}'.`
-            } else {
-                html = `<h4>${results.length} search result${results.length > 1 ? "s" : ""} for '${escapeHTML(term)}'.</h4>`;
-            }
-            for (let result of results.slice(0, 10)) {
-                let doc = result.doc;
-                let url = `${doc.modulename.replaceAll(".", "/")}.html`;
-                if (doc.qualname) {
-                    url += `#${doc.qualname}`;
-                }
-
-                let heading;
-                switch (result.doc.kind) {
-                    case "function":
-                        if (doc.fullname.endsWith(".__init__")) {
-                            heading = `<span class="name">${doc.fullname.replace(/\.__init__$/, "")}</span>${doc.signature}`;
-                        } else {
-                            heading = `<span class="def">${doc.funcdef}</span> <span class="name">${doc.fullname}</span>${doc.signature}`;
-                        }
-                        break;
-                    case "class":
-                        heading = `<span class="def">class</span> <span class="name">${doc.fullname}</span>`;
-                        if (doc.bases)
-                            heading += `<wbr>(<span class="base">${doc.bases}</span>)`;
-                        heading += `:`;
-                        break;
-                    case "variable":
-                        heading = `<span class="name">${doc.fullname}</span>`;
-                        if (doc.annotation)
-                            heading += `<span class="annotation">${doc.annotation}</span>`;
-                        if (doc.default_value)
-                            heading += `<span class="default_value">${doc.default_value}</span>`;
-                        break;
-                    default:
-                        heading = `<span class="name">${doc.fullname}</span>`;
-                        break;
-                }
-                html += `
-                        <section class="search-result">
-                        <a href="${url}" class="attr ${doc.kind}">${heading}</a>
-                        <div class="docstring">${doc.doc}</div>
-                        </section>
-                    `;
-
-            }
-            return html;
-        })());
-    }
-
-    if (getSearchTerm()) {
-        initialize();
-        searchBox.value = getSearchTerm();
-        onInput();
-    } else {
-        searchBox.addEventListener("focus", initialize, {once: true});
-    }
-
-    searchBox.addEventListener("keydown", e => {
-        if (["ArrowDown", "ArrowUp", "Enter"].includes(e.key)) {
-            let focused = currentContent.querySelector(".search-result.focused");
-            if (!focused) {
-                currentContent.querySelector(".search-result").classList.add("focused");
-            } else if (
-                e.key === "ArrowDown"
-                && focused.nextElementSibling
-                && focused.nextElementSibling.classList.contains("search-result")
-            ) {
-                focused.classList.remove("focused");
-                focused.nextElementSibling.classList.add("focused");
-                focused.nextElementSibling.scrollIntoView({
-                    behavior: "smooth",
-                    block: "nearest",
-                    inline: "nearest"
-                });
-            } else if (
-                e.key === "ArrowUp"
-                && focused.previousElementSibling
-                && focused.previousElementSibling.classList.contains("search-result")
-            ) {
-                focused.classList.remove("focused");
-                focused.previousElementSibling.classList.add("focused");
-                focused.previousElementSibling.scrollIntoView({
-                    behavior: "smooth",
-                    block: "nearest",
-                    inline: "nearest"
-                });
-            } else if (
-                e.key === "Enter"
-            ) {
-                focused.querySelector("a").click();
-            }
-        }
-    });
-</script></body>
+</body>
 </html>
